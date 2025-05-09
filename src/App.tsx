@@ -47,17 +47,16 @@ function App() {
   const [tratamientosDisponibles, setTratamientosDisponibles] = useState<Tratamiento[]>([]);
 
 
-  const handleChangenombreDen = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNombreDen(e.target.value);
-  }; const handleChangenombreCliente = (e: React.ChangeEvent<HTMLInputElement>) => {
-    sertNombreCliente(e.target.value);
+  const handleChangenombreDen = (value: string) => {
+    setNombreDen(value);
+  }; const handleChangenombreCliente = (value: string) => {
+    sertNombreCliente(value);
   };
 
-  const handleChangeTratamientoGeneral = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTratamientoGenText(e.target.value);
-    console.log("eeeeeeeee", e.target.value)
+  const handleChangeTratamientoGeneral = (value: string) => {
+    setTratamientoGenText(value);
 
-    const tratF = tratamientosGenerales.find((t) => (t.nombre + " - " + t.costo) == e.target.value)
+    const tratF = tratamientosGenerales.find((t) => (t.nombre + " - " + t.costo) == value)
     if (tratF) {
       console.log("encontro", tratF)
       setTratGenselec(tratF)
@@ -65,8 +64,7 @@ function App() {
 
   };
 
-  const handleChangeAfeccion = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleChangeAfeccion = (value: string) => {
     setAfeccion(value);
 
     // Actualizar tratamientos disponibles según la afección seleccionada
@@ -244,13 +242,22 @@ function App() {
     doc.text('Presupuesto Dental', 14, 20);
 
     // Primera tabla
+    console.log(presupuesto.map((item) => item.tratamientos.map((tx)=>
+      (
+          item.afeccion + " - " + tx.nombre + " - dientes(" + item.dientes.length + ")" + item.dientes.map((d) => d),
+          tx.costo,
+          tx.costo * item.dientes.length
+    )
+      )));
     autoTable(doc, {
       head: [['Concepto', 'Costo Unitario', 'Costo Total']],
-      body: presupuesto.map((item, index) => [
-        item.afeccion + " - " + item.tratamientos[index].nombre + " - dientes(" + item.dientes.length + ")" + item.dientes.map((d) => d),
-        item.tratamientos[index].costo,
-        item.tratamientos[index].costo * item.dientes.length
-      ]),
+      body: presupuesto.flatMap((item) => 
+        item.tratamientos.map((tx) => [
+          `${item.afeccion} - ${tx.nombre} - dientes(${item.dientes.length}) ${item.dientes.join(", ")}`,
+          `$${tx.costo.toLocaleString()}`,
+          `$${(tx.costo * item.dientes.length).toLocaleString()}`
+        ])
+      ),
       startY: 30,
       ...tableStyles,
       didDrawPage: function (data) {
@@ -314,9 +321,9 @@ function App() {
     //setTratamientosDisponibles((prev) => [...prev, tratamiento]);
   };
 
-  function formatNumber(num: number): string {
+  /*function formatNumber(num: number): string {
     return num.toString().replace('/\B(?=(\d{3})+(?!\d)/g', ",");
-  }
+  }*/
 
   interface Tratamiento {
     nombre: string;
@@ -423,9 +430,9 @@ function App() {
     {
       nombre: "Ausencia Dental",
       tratamientos: [
-        { nombre: "Prótesis fija de 3 unidades metal porcelana", costo: 11000 },
-        { nombre: "Prótesis fija de 3 unidades EMAX", costo: 18000 },
-        { nombre: "Prótesis fija de 3 unidades Zirconia", costo: 18000 },
+        { nombre: "Prótesis fija de 3 unidades metal porcelana", costo: 11000/3 },
+        { nombre: "Prótesis fija de 3 unidades EMAX", costo: 6000 },
+        { nombre: "Prótesis fija de 3 unidades Zirconia", costo: 6000 },
       ],
     },
     {
@@ -460,9 +467,9 @@ function App() {
     },
   ];
 
-  const handleChangeDiente = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDiente(e.target.value);
-    const idDiente = e.target.value.slice(0, 2)
+  const handleChangeDiente = (value: string) => {
+    setDiente(value);
+    const idDiente = value.slice(0, 2)
     const dienteF = dientes.find((d) => d.id == idDiente)
     const dientesSeleccionadosF = dientesSeleccionados.find((d) => d.id == idDiente)
     if (dienteF && !dientesSeleccionadosF) {
@@ -517,7 +524,7 @@ function App() {
               label="Nombre Dentista"
               variant="outlined"
               value={nombreDen}
-              onChange={handleChangenombreDen}
+              onChange={(e)=>{handleChangenombreDen(e.target.value)}}
               margin="normal"
             />
             <TextField
@@ -525,7 +532,7 @@ function App() {
               label="Nombre Paciente"
               variant="outlined"
               value={nombreCliente}
-              onChange={handleChangenombreCliente}
+              onChange={(e)=>{handleChangenombreCliente(e.target.value)}}
               margin="normal"
             />
 
@@ -534,12 +541,12 @@ function App() {
                 freeSolo
                 options={afecciones.map((option) => option.nombre)}
                 value={afeccion}
-                onChange={(event, newValue) => {
-                  handleChangeAfeccion({ target: { value: newValue ?? "" } });
+                onChange={(_event, newValue) => {
+                  handleChangeAfeccion(  newValue ?? "");
                 }}
                 inputValue={afeccion}
-                onInputChange={(event, newInputValue) => {
-                  handleChangeAfeccion({ target: { value: newInputValue } });
+                onInputChange={(_event, newInputValue) => {
+                  handleChangeAfeccion(newInputValue);
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -561,11 +568,11 @@ function App() {
                 freeSolo
                 options={dientes.map((diente) => `${diente.id} - ${diente.nombre}`)}
                 value={diente}
-                onChange={(event, newValue) => {
-                  handleChangeDiente({ target: { value: newValue ?? "" } });
+                onChange={(_event, newValue) => {
+                  handleChangeDiente(newValue ?? "" );
                 }}
-                onInputChange={(event, newInputValue) => {
-                  handleChangeDiente({ target: { value: newInputValue } });
+                onInputChange={(_event, newInputValue) => {
+                  handleChangeDiente(newInputValue);
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -648,17 +655,17 @@ function App() {
             (tratamiento) => `${tratamiento.nombre} - $${tratamiento.costo}`
           )}
           value={tratamientoGenText}
-          onChange={(event, newValue) => {
+          onChange={(_event, newValue) => {
             const tratamientoSeleccionado = tratamientosGenerales.find(
               (t) => `${t.nombre} - $${t.costo}` === newValue
             );
             if (tratamientoSeleccionado) {
               setTratGenselec(tratamientoSeleccionado);
             }
-            handleChangeTratamientoGeneral({ target: { value: newValue ?? "" } });
+            handleChangeTratamientoGeneral(newValue ?? "");
           }}
-          onInputChange={(event, newInputValue) => {
-            handleChangeTratamientoGeneral({ target: { value: newInputValue ?? "" } });
+          onInputChange={(_event, newInputValue) => {
+            handleChangeTratamientoGeneral(newInputValue ?? "");
           }}
           renderInput={(params) => (
             <TextField
@@ -721,7 +728,7 @@ function App() {
                 <TableCell align="right">${item.costo}</TableCell>
               </TableRow>
             ))}
-            <TableRow>
+            {/*<TableRow>
               <TableCell colSpan={1} align="right">
                 <Typography variant="subtitle1">Total General:</Typography>
               </TableCell>
@@ -733,7 +740,7 @@ function App() {
                   ).toFixed(2)}
                 </Typography>
               </TableCell>
-            </TableRow>
+            </TableRow>*/}
           </TableBody>
         </Table>}
       </Paper>
