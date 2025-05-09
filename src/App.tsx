@@ -2,15 +2,17 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import autoTable, { UserOptions } from 'jspdf-autotable';
-import imgMembrete from './assets/hoja membretada-  Smile360 B.jpg';
+import imgLogo from './assets/SMILE360logo.jpg';
+import whaIcon from './assets/whatsapp.png';
+import facIcon from './assets/facebook.png';
+import insIcon from './assets/instagram.png';
+import locIcon from './assets/location-dot-solid.png';
+
 import {
   Box,
   Button,
   TextField,
-  MenuItem,
-  Select,
   FormControl,
-  InputLabel,
   Table,
   TableHead,
   TableBody,
@@ -58,7 +60,6 @@ function App() {
 
     const tratF = tratamientosGenerales.find((t) => (t.nombre + " - " + t.costo) == value)
     if (tratF) {
-      console.log("encontro", tratF)
       setTratGenselec(tratF)
     }
 
@@ -113,7 +114,6 @@ function App() {
   };
 
   const agregarTratGeneral = () => {
-    console.log("bolivianer", tratGenSelec)
     if (tratGenSelec == null) return
     setTratamientosGeneralesSelectos([
       ...tratamientosGeneralesSelectos,
@@ -123,173 +123,169 @@ function App() {
     setTratamientoGenText('')
   }
 
-  /*const generarPDF = async () => {
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "px",
-      format: [1650, 1275] // Ajusta según tus necesidades (ancho, alto)
-    });
-    console.log("llegaasdq")
-    doc.addImage(imgMembrete, 'JPEG', 0, 0, 1650, 1275);
-    // Estilo minimalista con bordes negros (con tipos explícitos)
-    const tableStyles: UserOptions = {
-      headStyles: {
-        fillColor: [255, 255, 255], // Fondo blanco
-        textColor: [0, 0, 0],       // Texto negro
-        fontStyle: 'bold' as const,  // 'as const' para tipo literal
-        lineColor: [0, 0, 0],       // Bordes negros
-        lineWidth: 0.2
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255], // Fondo blanco
-        textColor: [0, 0, 0],       // Texto negro
-        lineColor: [0, 0, 0],       // Bordes negros
-        lineWidth: 0.1
-      },
-      alternateRowStyles: {
-        fillColor: [255, 255, 255]   // Mantener blanco
-      },
-      margin: { top: 20 },
-      styles: {
-        cellPadding: 2,
-        fontSize: 10,
-        halign: 'left' as const,    // Tipo específico para halign
-        valign: 'middle' as const   // Tipo específico para valign
-      }
-    };
-  
-    // Resto del código permanece igual...
-    // Título del documento
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0);
-    doc.text('Presupuesto Dental', 14, 20);
-  
-    // Primera tabla
-    autoTable(doc, {
-      head: [['Concepto', 'Costo Unitario', 'Costo Total']],
-      body: presupuesto.map((item, index) => [
-        item.afeccion+" - "+ item.tratamientos[index].nombre +" - dientes("+item.dientes.length +")"+item.dientes.map((d) => d),
-        item.tratamientos[index].costo,
-        item.tratamientos[index].costo * item.dientes.length
-      ]),
-      startY: 30,
-      ...tableStyles,
-      didDrawPage: function(data) {
-        const yPosition = data.cursor ? data.cursor.y + 20 : 70; 
-        doc.setFontSize(12);
-        doc.text('Tratamientos Generales', data.settings.margin.left, yPosition);
-      }
-    });
-
-    const finalY = (doc as any).lastAutoTable?.finalY || 70;
-    
-    autoTable(doc, {
-      head: [['Tratamiento', 'Costo']],
-      body: tratamientosGeneralesSelectos.map(item => [
-        item.nombre,
-        `$${item.costo.toLocaleString()}`
-      ]),
-      startY: finalY + 30,
-      ...tableStyles
-    });
-  
-    // Total general
-    // const totalGeneral = presupuesto.reduce((sum, item) => sum + item.total, 0) + 
-                        //tratamientosGeneralesSelectos.reduce((sum, item) => sum + item.costo, 0);
-    
-    const finalY2 = (doc as any).lastAutoTable?.finalY || 100;
-    
-    doc.setFontSize(12);
-    doc.setFont('arial', 'bold');
-    doc.text(`Total General: $${formatNumber(0)}`, 14, finalY2 + 20);
-  
-    doc.save('presupuesto_dental.pdf');
-  };*/
-
   const generarPDF = () => {
     const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 10;
+    let yPosition = 10;
 
-    // Estilo minimalista con bordes negros
-    const tableStyles: UserOptions = {
-      headStyles: {
-        fillColor: [255, 255, 255], // Fondo blanco
-        textColor: [0, 0, 0],       // Texto negro
-        fontStyle: 'bold',
-        lineColor: [0, 0, 0],       // Bordes negros
-        lineWidth: 0.2
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255], // Fondo blanco
-        textColor: [0, 0, 0],       // Texto negro
-        lineColor: [0, 0, 0],       // Bordes negros
-        lineWidth: 0.1
-      },
-      alternateRowStyles: {
-        fillColor: [255, 255, 255]  // Mantener blanco (sin filas alternas coloreadas)
-      },
-      margin: { top: 20 },
-      styles: {
-        cellPadding: 4,
-        fontSize: 10,
-        halign: 'left',
-        valign: 'middle'
-      }
+    // Estilos
+    const styles = {
+        title: { size: 14, color: [0, 0, 0], font: 'helvetica', style: 'bold' },
+        subtitle: { size: 12, color: [0, 0, 0], font: 'helvetica', style: 'normal' },
+        header: { size: 10, color: [0, 0, 0], font: 'helvetica', style: 'bold' },
+        body: { size: 10, color: [0, 0, 0], font: 'helvetica', style: 'normal' },
+        footer: { size: 8, color: [100, 100, 100], font: 'helvetica', style: 'normal' },
+        icon: { size: 12, color: [50, 50, 50] }
     };
 
-    // Título del documento
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0);
-    doc.text('Presupuesto Dental', 14, 20);
+    // 1. Logo (asegúrate de tener la imagen en base64 o URL)
+     doc.addImage(imgLogo, 'JPEG', margin, yPosition, 50, 50);
+    yPosition += 15;
 
-    // Primera tabla
-    console.log(presupuesto.map((item) => item.tratamientos.map((tx)=>
-      (
-          item.afeccion + " - " + tx.nombre + " - dientes(" + item.dientes.length + ")" + item.dientes.map((d) => d),
-          tx.costo,
-          tx.costo * item.dientes.length
-    )
-      )));
+    // 2. Fecha y título
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    
+    const formattedDate = new Intl.DateTimeFormat('es-MX', options).format(today);
+    const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    
+    doc.setFont(styles.subtitle.font, styles.subtitle.style);
+    doc.setFontSize(styles.subtitle.size);
+    doc.setTextColor(...styles.subtitle.color);
+    
+    // Asegurar que la fecha no se salga del documento
+    const dateWidth = doc.getStringUnitWidth(capitalizedDate) * styles.subtitle.size / doc.internal.scaleFactor;
+    const maxDateX = pageWidth - margin;
+    const dateX = Math.max(margin, maxDateX - dateWidth);
+    doc.text(capitalizedDate, dateX, yPosition + 6);
+    
+    
+    yPosition += 25;
+    
+    doc.setFont(styles.title.font, styles.title.style);
+    doc.setFontSize(styles.title.size);
+    doc.setTextColor(...styles.title.color);
+    doc.text('Cotización de plan de tratamiento', pageWidth / 2, yPosition, { align: 'center' });
+    
+    yPosition += 10;
+    
+    // 3. Información del paciente
+    doc.setFont(styles.body.font, styles.body.style);
+    doc.setFontSize(styles.body.size);
+    doc.setTextColor(...styles.body.color);
+    doc.text(`Paciente: ${nombreCliente || 'Nombre del paciente'}`, margin, yPosition);
+    
+    yPosition += 8;
+
+    // 4. Tabla de tratamientos principales
     autoTable(doc, {
-      head: [['Concepto', 'Costo Unitario', 'Costo Total']],
-      body: presupuesto.flatMap((item) => 
-        item.tratamientos.map((tx) => [
-          `${item.afeccion} - ${tx.nombre} - dientes(${item.dientes.length}) ${item.dientes.join(", ")}`,
-          `$${tx.costo.toLocaleString()}`,
-          `$${(tx.costo * item.dientes.length).toLocaleString()}`
-        ])
-      ),
-      startY: 30,
-      ...tableStyles,
-      didDrawPage: function (data) {
-        const yPosition = data.cursor ? data.cursor.y + 20 : 70;
-        doc.setFontSize(12);
-        doc.text('Tratamientos Generales', data.settings.margin.left, yPosition);
-      }
+        startY: yPosition,
+        head: [['Afeccion / Tratamiento / Dientes', 'Costo unitario', 'Costo total']],
+        body: presupuesto.flatMap((item) => 
+            item.tratamientos.map((tx) => [
+                `${item.afeccion} / ${tx.nombre} / OD ${item.dientes.map(d => `${d}`).join(', ')} (${item.dientes.length} dientes)`,
+                tx.costo ? `$${tx.costo.toLocaleString('es-MX')}` : '-',
+                `$${(tx.costo * item.dientes.length).toLocaleString('es-MX')}`
+            ])
+        ),
+        styles: {
+            fontSize: 9,
+            cellPadding: 3,
+            halign: 'left',
+            valign: 'middle'
+        },
+        headStyles: {
+            fillColor: [255, 255, 255],
+            textColor: [0, 0, 0],
+            fontStyle: 'bold',
+            lineWidth: 0.2
+        },
+        bodyStyles: {
+            fillColor: [255, 255, 255],
+            textColor: [0, 0, 0],
+            lineWidth: 0.1
+        },
+        columnStyles: {
+            0: { cellWidth: 'auto' },
+            1: { cellWidth: 'auto', halign: 'right' },
+            2: { cellWidth: 'auto', halign: 'right' }
+        },
+        margin: { left: margin, right: margin }
     });
 
-    const finalY = (doc as any).lastAutoTable?.finalY || 70;
+    // 5. Tabla de tratamientos generales (si existen)
+    if (tratamientosGeneralesSelectos.length > 0) {
+        yPosition = (doc as any).lastAutoTable.finalY + 10;
+        
+        autoTable(doc, {
+            startY: yPosition,
+            head: [['Tratamiento General', 'Costo']],
+            body: tratamientosGeneralesSelectos.map(item => [
+                item.nombre,
+                `$${item.costo.toLocaleString('es-MX')}`
+            ]),
+            styles: {
+                fontSize: 9,
+                cellPadding: 3,
+                halign: 'left',
+                valign: 'middle'
+            },
+            headStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0],
+                fontStyle: 'bold',
+                lineWidth: 0.2
+            },
+            columnStyles: {
+                0: { cellWidth: 'auto' },
+                1: { cellWidth: 'auto', halign: 'right' }
+            },
+            margin: { left: margin, right: margin }
+        });
+    }
 
-    autoTable(doc, {
-      head: [['Tratamiento', 'Costo']],
-      body: tratamientosGeneralesSelectos.map(item => [
-        item.nombre,
-        `$${item.costo.toLocaleString()}`
-      ]),
-      startY: finalY + 30,
-      ...tableStyles
-    });
+    // 6. Notas importantes
+    yPosition = (doc as any).lastAutoTable.finalY + 15;
+    doc.setFont(styles.body.font, styles.body.style);
+    doc.setFontSize(styles.body.size);
+    doc.setTextColor(...styles.body.color);
+    
+    const notaText = "La cotización NO incluye gabinete radiográfico como estudio de tomografía computarizada o planeación digital.";
+    doc.text(notaText, margin, yPosition, { maxWidth: pageWidth - margin * 2 });
 
-    /*const totalGeneral = presupuesto.reduce((sum, item) => sum + item.total, 0) + 
-                        tratamientosGeneralesSelectos.reduce((sum, item) => sum + item.costo, 0);*/
-
-    const finalY2 = (doc as any).lastAutoTable?.finalY || 100;
-
-    doc.setFontSize(12);
-    doc.setFont('', 'bold');
-    doc.text(`Total General: $${(15000).toLocaleString()}`, 14, finalY2 + 20);
-
-    doc.save('presupuesto_dental.pdf');
-  };
+    // 7. Pie de página (información de la clínica)
+    yPosition = doc.internal.pageSize.getHeight() - 15;
+    
+    
+    // Iconos (usando texto como iconos simples)
+    const iconSize = styles.icon.size;
+    //const iconColor = `rgb(${styles.icon.color.join(',')})`;
+    
+    // Instagram
+    doc.addImage(insIcon, 'PNG', margin, yPosition, 4, 4);
+    doc.setFontSize(iconSize);
+    doc.setTextColor(...styles.icon.color);
+    doc.addImage(facIcon, 'PNG', margin+5, yPosition, 4, 4);
+    doc.setFontSize(styles.footer.size);
+    doc.text('@clinica_smile360', margin + 11, yPosition + 3);
+    // Teléfono y otros datos
+    doc.setFont(styles.footer.font, styles.footer.style);
+    doc.addImage(whaIcon, 'PNG', margin+70, yPosition, 4, 4); // Icono de wha
+    doc.text(`Teléfono: 662-338-0376`, margin+77, yPosition+3)
+    // Ubicación
+    doc.setFontSize(iconSize);
+    doc.addImage(locIcon, 'PNG', pageWidth-margin-63, yPosition, 4, 4); // Icono de ubicación
+    doc.setFontSize(styles.footer.size);
+    doc.text('Calle Pino Suárez #148', pageWidth - margin - 55, yPosition+3);
+    // Guardar el PDF
+    doc.save(`Presupuesto_${nombreCliente || 'paciente'}_${today.getFullYear()}${(today.getMonth()+1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}.pdf`);
+};
 
   const handleTratamientoSeleccionado = (tratamiento: Tratamiento) => {
     const tratSeleccionado = tratamientosDisponibles.find((trat) => trat.nombre == tratamiento.nombre)
@@ -430,7 +426,7 @@ function App() {
     {
       nombre: "Ausencia Dental",
       tratamientos: [
-        { nombre: "Prótesis fija de 3 unidades metal porcelana", costo: 11000/3 },
+        { nombre: "Prótesis fija de 3 unidades metal porcelana", costo: 3666.66 },
         { nombre: "Prótesis fija de 3 unidades EMAX", costo: 6000 },
         { nombre: "Prótesis fija de 3 unidades Zirconia", costo: 6000 },
       ],
@@ -553,14 +549,10 @@ function App() {
                     {...params}
                     label="Afección"
                     variant="outlined"
+                    margin="normal"
+                    color="error"
                   />
                 )}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    paddingTop: '0px !important',
-                    paddingBottom: '0px !important'
-                  }
-                }}
               />
             </FormControl>
             <FormControl fullWidth margin="normal">
