@@ -1,7 +1,7 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
-import autoTable, { UserOptions } from 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import imgLogo from './assets/SMILE360logo.jpg';
 import whaIcon from './assets/whatsapp.png';
 import facIcon from './assets/facebook.png';
@@ -355,7 +355,7 @@ const agregarNuevoTratamientoGeneral = () => {
     
     doc.setFont(styles.subtitle.font, styles.subtitle.style);
     doc.setFontSize(styles.subtitle.size);
-    doc.setTextColor(...styles.subtitle.color);
+    doc.setTextColor(styles.subtitle.color[0], styles.subtitle.color[1], styles.subtitle.color[2]);
     
     // Asegurar que la fecha no se salga del documento
     const dateWidth = doc.getStringUnitWidth(capitalizedDate) * styles.subtitle.size / doc.internal.scaleFactor;
@@ -368,7 +368,7 @@ const agregarNuevoTratamientoGeneral = () => {
     
     doc.setFont(styles.title.font, styles.title.style);
     doc.setFontSize(styles.title.size);
-    doc.setTextColor(...styles.title.color);
+    doc.setTextColor(styles.title.color[0], styles.title.color[1], styles.title.color[2]);
     doc.text('Cotización de plan de tratamiento', pageWidth / 2, yPosition, { align: 'center' });
     
     yPosition += 10;
@@ -376,14 +376,14 @@ const agregarNuevoTratamientoGeneral = () => {
     // 3. Información del dentista
     doc.setFont(styles.body.font, styles.body.style);
     doc.setFontSize(styles.body.size);
-    doc.setTextColor(...styles.body.color);
+    doc.setTextColor(0,0,0);
     doc.text(`Dentista: ${nombreDen || ''}`, margin, yPosition);
     yPosition += 8;
     
     // 3.5 Información del paciente
     doc.setFont(styles.body.font, styles.body.style);
     doc.setFontSize(styles.body.size);
-    doc.setTextColor(...styles.body.color);
+    doc.setTextColor(0,0,0);
     doc.text(`Paciente: ${nombreCliente || ''}`, margin, yPosition);
     
     yPosition += 8;
@@ -459,7 +459,7 @@ const agregarNuevoTratamientoGeneral = () => {
     yPosition = (doc as any).lastAutoTable.finalY + 15;
     doc.setFont(styles.body.font, styles.body.style);
     doc.setFontSize(styles.body.size);
-    doc.setTextColor(...styles.body.color);
+    doc.setTextColor(0,0,0);
     
     const notaText = "La cotización NO incluye gabinete radiográfico como estudio de tomografía computarizada o planeación digital.";
     doc.text(notaText, margin, yPosition, { maxWidth: pageWidth - margin * 2 });
@@ -475,7 +475,7 @@ const agregarNuevoTratamientoGeneral = () => {
     // Instagram
     doc.addImage(insIcon, 'PNG', margin, yPosition, 4, 4);
     doc.setFontSize(iconSize);
-    doc.setTextColor(...styles.icon.color);
+    doc.setTextColor(0,0,0);
     doc.addImage(facIcon, 'PNG', margin+5, yPosition, 4, 4);
     doc.setFontSize(styles.footer.size);
     doc.text('@clinica_smile360', margin + 11, yPosition + 3);
