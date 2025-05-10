@@ -28,7 +28,6 @@ import {
 import Grid from '@mui/material/Grid';
 
 function App() {
-  // Estados individuales para cada campo
   const [diente, setDiente] = useState<string>('');
   const [nombreDen, setNombreDen] = useState<string>('');
   const [nombreCliente, sertNombreCliente] = useState<string>('');
@@ -42,12 +41,225 @@ function App() {
   const [banderaD, setBanderaD] = useState(false);
   const [tratamientosSeleccionados, setTratamientosSeleccionados] = useState<Tratamiento[]>([]);
   const [dientesSeleccionados, setDientesSeleccionados] = useState<Diente[]>([]);
+//pete malo
+const [afecciones, setAfecciones] = useState<Afeccion[]>([
+  {
+    nombre: "Caries Incipiente",
+    tratamientos: [{ nombre: "Sellador", costo: 800 }],
+  },
+  {
+    nombre: "Caries clase 1",
+    tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+  },
+  {
+      nombre: "Caries clase 2",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Caries clase 3",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Caries clase 4",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Ausencia Dental",
+      tratamientos: [
+        { nombre: "Prótesis fija de 3 unidades metal porcelana", costo: 3666.66 },
+        { nombre: "Prótesis fija de 3 unidades EMAX", costo: 6000 },
+        { nombre: "Prótesis fija de 3 unidades Zirconia", costo: 6000 },
+      ],
+    },
+    {
+      nombre: "Desgaste",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "RECESION GINGIVAL",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Fractura Coronaria",
+      tratamientos: [
+        { nombre: "Reconstrucción de resina", costo: 1500 },
+        { nombre: "Rehabilitación porcelana", costo: 8000 },
+        { nombre: "Endodoncia y corona porcelana", costo: 13000 },
+        { nombre: "Extracción", costo: 800 },
+      ],
+    },
+    {
+      nombre: "AGRANDAMIENTO GINGIVAL",
+      tratamientos: [{ nombre: "ALARGAMIENTO DE CORONA", costo: 2300 }],
+    },
+    {
+      nombre: "Fractura Vertical",
+      tratamientos: [
+        { nombre: "Extraccion", costo: 800 },
+        { nombre: "MOVILIDAD GRADO 3 - Extraccion", costo: 8000 },
+        { nombre: "Endodoncia y corona porcelana", costo: 13000 },
+        { nombre: "Extracción", costo: 800 },
+      ],
+    },
+]);
+/*
+  const afecciones: Afeccion[] = [
+    {
+      nombre: "Caries Incipiente",
+      tratamientos: [{ nombre: "Sellador", costo: 800 }],
+    },
+    {
+      nombre: "Caries clase 1",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Caries clase 2",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Caries clase 3",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Caries clase 4",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Ausencia Dental",
+      tratamientos: [
+        { nombre: "Prótesis fija de 3 unidades metal porcelana", costo: 3666.66 },
+        { nombre: "Prótesis fija de 3 unidades EMAX", costo: 6000 },
+        { nombre: "Prótesis fija de 3 unidades Zirconia", costo: 6000 },
+      ],
+    },
+    {
+      nombre: "Desgaste",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "RECESION GINGIVAL",
+      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
+    },
+    {
+      nombre: "Fractura Coronaria",
+      tratamientos: [
+        { nombre: "Reconstrucción de resina", costo: 1500 },
+        { nombre: "Rehabilitación porcelana", costo: 8000 },
+        { nombre: "Endodoncia y corona porcelana", costo: 13000 },
+        { nombre: "Extracción", costo: 800 },
+      ],
+    },
+    {
+      nombre: "AGRANDAMIENTO GINGIVAL",
+      tratamientos: [{ nombre: "ALARGAMIENTO DE CORONA", costo: 2300 }],
+    },
+    {
+      nombre: "Fractura Vertical",
+      tratamientos: [
+        { nombre: "Extraccion", costo: 800 },
+        { nombre: "MOVILIDAD GRADO 3 - Extraccion", costo: 8000 },
+        { nombre: "Endodoncia y corona porcelana", costo: 13000 },
+        { nombre: "Extracción", costo: 800 },
+      ],
+    },
+  ];*/
+
+const [showNuevaAfeccion, setShowNuevaAfeccion] = useState(false);
+const [nuevaAfeccion, setNuevaAfeccion] = useState('');
+const [showNuevoTratamiento, setShowNuevoTratamiento] = useState(false);
+const [nuevoTratamiento, setNuevoTratamiento] = useState('');
+const [costoTratamiento, setCostoTratamiento] = useState(0);
+const [showNuevoTratamientoGeneral, setShowNuevoTratamientoGeneral] = useState(false);
+const [nuevoTratamientoGeneral, setNuevoTratamientoGeneral] = useState('');
+const [costoTratamientoGeneral, setCostoTratamientoGeneral] = useState(0);
 
   const [presupuesto, setPresupuesto] = useState<
     { dientes: string[]; afeccion: string; tratamientos: Tratamiento[]; }[]
   >([]);
   const [tratamientosDisponibles, setTratamientosDisponibles] = useState<Tratamiento[]>([]);
 
+//pete malo
+const agregarNuevaAfeccion = () => {
+  if (nuevaAfeccion.trim() === '') {
+    alert('Por favor ingresa un nombre para la afección');
+    return;
+  }
+  
+  if (afecciones.some(af => af.nombre.toLowerCase() === nuevaAfeccion.toLowerCase())) {
+    alert('Esta afección ya existe');
+    return;
+  }
+
+  const nuevaAfeccionObj: Afeccion = {
+    nombre: nuevaAfeccion,
+    tratamientos: [] // Inicialmente sin tratamientos
+  };
+  
+  setAfecciones([...afecciones, nuevaAfeccionObj]);
+  setNuevaAfeccion('');
+  setShowNuevaAfeccion(false);
+  setAfeccion(nuevaAfeccion); // Seleccionar la nueva afección automáticamente
+};
+
+const agregarNuevoTratamiento = () => {
+  if (nuevoTratamiento.trim() === '') {
+    alert('Por favor ingresa un nombre para el tratamiento');
+    return;
+  }
+
+  if (!afeccion) {
+    alert('Primero selecciona una afección');
+    return;
+  }
+
+  const nuevoTratamientoObj: Tratamiento = {
+    nombre: nuevoTratamiento,
+    costo: costoTratamiento
+  };
+
+  // Actualizar la afección con el nuevo tratamiento
+  const afeccionesActualizadas = afecciones.map(af => {
+    if (af.nombre === afeccion) {
+      // Verificar si el tratamiento ya existe
+      if (af.tratamientos.some(t => t.nombre.toLowerCase() === nuevoTratamiento.toLowerCase())) {
+        alert('Este tratamiento ya existe para esta afección');
+        return af;
+      }
+      return {
+        ...af,
+        tratamientos: [...af.tratamientos, nuevoTratamientoObj]
+      };
+    }
+    return af;
+  });
+
+  setAfecciones(afeccionesActualizadas);
+  
+  // Actualizar el estado de tratamientos seleccionados
+  const afeccionActual = afeccionesActualizadas.find(af => af.nombre === afeccion);
+  if (afeccionActual) {
+    setTratamientosSeleccionados(afeccionActual.tratamientos);
+  }
+
+  setNuevoTratamiento('');
+  setCostoTratamiento(0);
+  setShowNuevoTratamiento(false);
+};
+
+const agregarNuevoTratamientoGeneral = () => {
+  if (nuevoTratamientoGeneral.trim() === '') return;
+  
+  const nuevoTratamientoGeneralObj: Tratamiento = {
+    nombre: nuevoTratamientoGeneral,
+    costo: costoTratamientoGeneral
+  };
+  
+  setTratamientosGeneralesSelectos([...tratamientosGenerales, nuevoTratamientoGeneralObj]);
+  setNuevoTratamientoGeneral('');
+  setCostoTratamientoGeneral(0);
+  setShowNuevoTratamientoGeneral(false);
+};
+//
 
   const handleChangenombreDen = (value: string) => {
     setNombreDen(value);
@@ -66,29 +278,15 @@ function App() {
   };
 
   const handleChangeAfeccion = (value: string) => {
-    setAfeccion(value);
-
-    // Actualizar tratamientos disponibles según la afección seleccionada
-    const afeccionSeleccionada = afecciones.find((af) => af.nombre === value);
-    if (afeccionSeleccionada) {
-      setTratamientosSeleccionados(afeccionSeleccionada.tratamientos);
-      setTratamientosDisponibles([]);
-    }
-    /*
-    if (afeccionSeleccionada.tratamientos.length === 1) {
-      // Si solo hay un tratamiento, seleccionarlo automáticamente
-      setTratamientosSeleccionados([afeccionSeleccionada.tratamientos[0]]);
-      setTratamientosDisponibles([]);
-    } else {
-      // Si hay múltiples tratamientos, mostrarlos como opciones
-      setTratamientosDisponibles(afeccionSeleccionada.tratamientos);
-      setTratamientosSeleccionados([]);
-    }
-  } else {
+  setAfeccion(value);
+  const afeccionSeleccionada = afecciones.find((af) => af.nombre === value);
+  if (afeccionSeleccionada) {
+    setTratamientosSeleccionados(afeccionSeleccionada.tratamientos);
     setTratamientosDisponibles([]);
+  } else {
     setTratamientosSeleccionados([]);
-  }*/
-  };
+  }
+};
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -175,11 +373,18 @@ function App() {
     
     yPosition += 10;
     
-    // 3. Información del paciente
+    // 3. Información del dentista
     doc.setFont(styles.body.font, styles.body.style);
     doc.setFontSize(styles.body.size);
     doc.setTextColor(...styles.body.color);
-    doc.text(`Paciente: ${nombreCliente || 'Nombre del paciente'}`, margin, yPosition);
+    doc.text(`Dentista: ${nombreDen || ''}`, margin, yPosition);
+    yPosition += 8;
+    
+    // 3.5 Información del paciente
+    doc.setFont(styles.body.font, styles.body.style);
+    doc.setFontSize(styles.body.size);
+    doc.setTextColor(...styles.body.color);
+    doc.text(`Paciente: ${nombreCliente || ''}`, margin, yPosition);
     
     yPosition += 8;
 
@@ -306,7 +511,6 @@ function App() {
     const dienSeleccionado = dientes.find((dien) => dien.id == diente.id)
     if (dienSeleccionado) {
       setDientesSeleccionados([...dientesSeleccionados, dienSeleccionado])
-      //setTratamientosDisponibles(tratamientosDisponibles.filter((x) => x.nombre !== diente.nombre))
     }
   };
 
@@ -314,12 +518,7 @@ function App() {
     setDientesSeleccionados((prev) =>
       prev.filter((t) => t.id !== diente.id)
     );
-    //setTratamientosDisponibles((prev) => [...prev, tratamiento]);
   };
-
-  /*function formatNumber(num: number): string {
-    return num.toString().replace('/\B(?=(\d{3})+(?!\d)/g', ",");
-  }*/
 
   interface Tratamiento {
     nombre: string;
@@ -402,66 +601,6 @@ function App() {
     { nombre: "Incisivo central", id: "31" },
   ];
 
-  const afecciones: Afeccion[] = [
-    {
-      nombre: "Caries Incipiente",
-      tratamientos: [{ nombre: "Sellador", costo: 800 }],
-    },
-    {
-      nombre: "Caries clase 1",
-      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
-    },
-    {
-      nombre: "Caries clase 2",
-      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
-    },
-    {
-      nombre: "Caries clase 3",
-      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
-    },
-    {
-      nombre: "Caries clase 4",
-      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
-    },
-    {
-      nombre: "Ausencia Dental",
-      tratamientos: [
-        { nombre: "Prótesis fija de 3 unidades metal porcelana", costo: 3666.66 },
-        { nombre: "Prótesis fija de 3 unidades EMAX", costo: 6000 },
-        { nombre: "Prótesis fija de 3 unidades Zirconia", costo: 6000 },
-      ],
-    },
-    {
-      nombre: "Desgaste",
-      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
-    },
-    {
-      nombre: "RECESION GINGIVAL",
-      tratamientos: [{ nombre: "Obturación con resina", costo: 800 }],
-    },
-    {
-      nombre: "Fractura Coronaria",
-      tratamientos: [
-        { nombre: "Reconstrucción de resina", costo: 1500 },
-        { nombre: "Rehabilitación porcelana", costo: 8000 },
-        { nombre: "Endodoncia y corona porcelana", costo: 13000 },
-        { nombre: "Extracción", costo: 800 },
-      ],
-    },
-    {
-      nombre: "AGRANDAMIENTO GINGIVAL",
-      tratamientos: [{ nombre: "ALARGAMIENTO DE CORONA", costo: 2300 }],
-    },
-    {
-      nombre: "Fractura Vertical",
-      tratamientos: [
-        { nombre: "Extraccion", costo: 800 },
-        { nombre: "MOVILIDAD GRADO 3 - Extraccion", costo: 8000 },
-        { nombre: "Endodoncia y corona porcelana", costo: 13000 },
-        { nombre: "Extracción", costo: 800 },
-      ],
-    },
-  ];
 
   const handleChangeDiente = (value: string) => {
     setDiente(value);
@@ -510,11 +649,11 @@ function App() {
 
   return (
     <Box component="div">
-      <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h5" gutterBottom>Nuevo Presupuestos</Typography>
+      <Paper elevation={3} sx={{ p: 3, mb: .5 }}>
+        <Typography variant="h5" gutterBottom>Nuevo Presupuesto</Typography>
 
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <Grid container spacing={3}>
+          <Grid container spacing={.5}>
             <TextField
               fullWidth
               label="Nombre Dentista"
@@ -533,28 +672,103 @@ function App() {
             />
 
             <FormControl fullWidth margin="normal">
-              <Autocomplete
-                freeSolo
-                options={afecciones.map((option) => option.nombre)}
-                value={afeccion}
-                onChange={(_event, newValue) => {
-                  handleChangeAfeccion(  newValue ?? "");
-                }}
-                inputValue={afeccion}
-                onInputChange={(_event, newInputValue) => {
-                  handleChangeAfeccion(newInputValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Afección"
-                    variant="outlined"
-                    margin="normal"
-                    color="error"
-                  />
-                )}
-              />
-            </FormControl>
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Autocomplete
+      freeSolo
+      options={afecciones.map((option) => option.nombre)}
+      value={afeccion}
+      onChange={(_event, newValue) => {
+        handleChangeAfeccion(newValue ?? "");
+      }}
+      inputValue={afeccion}
+      onInputChange={(_event, newInputValue) => {
+        handleChangeAfeccion(newInputValue);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Afección"
+          variant="outlined"
+          margin="normal"
+          
+        />
+      )}
+      fullWidth
+    />
+    <Button 
+      variant="outlined" 
+      onClick={() => {
+        setShowNuevaAfeccion(!showNuevaAfeccion);
+        setShowNuevoTratamiento(false); // Ocultar campo de tratamiento si está visible
+      }}
+      sx={{ whiteSpace: 'nowrap' }}
+    >
+      {showNuevaAfeccion ? 'Cancelar' : '+ Afección'}
+    </Button>
+  </Box>
+  
+  {showNuevaAfeccion && (
+    <Box sx={{ mt: 2, display: 'flex', gap: 1, alignItems: 'center' }}>
+      <TextField
+        fullWidth
+        label="Nombre de la nueva afección"
+        value={nuevaAfeccion}
+        onChange={(e) => setNuevaAfeccion(e.target.value)}
+        size="small"
+      />
+      <Button 
+        variant="contained" 
+        onClick={agregarNuevaAfeccion}
+        size="small"
+      >
+        Agregar
+      </Button>
+    </Box>
+  )}
+</FormControl>
+
+{afeccion && (
+  <Box sx={{ mt: 2 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Button 
+        variant="outlined" 
+        size="small"
+        onClick={() => setShowNuevoTratamiento(!showNuevoTratamiento)}
+      >
+        {showNuevoTratamiento ? 'Cancelar' : 'Agregar Tratamiento'}
+      </Button>
+    </Box>
+    
+    {showNuevoTratamiento && (
+      <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+        <TextField
+          fullWidth
+          label="Nombre del tratamiento"
+          value={nuevoTratamiento}
+          onChange={(e) => setNuevoTratamiento(e.target.value)}
+        />
+        <TextField
+          label="Costo"
+          type="number"
+          value={costoTratamiento}
+          onChange={(e) => setCostoTratamiento(Number(e.target.value))}
+          sx={{ width: '120px' }}
+        />
+        <Button 
+          variant="contained" 
+          onClick={agregarNuevoTratamiento}
+        >
+          Agregar
+        </Button>
+      </Box>
+    )}
+    
+    <Grid container spacing={2} sx={{ mt: 1 }}>
+      {/* ... tu código existente para mostrar tratamientos ... */}
+    </Grid>
+  </Box>
+)}
+
             <FormControl fullWidth margin="normal">
               <Autocomplete
                 freeSolo
@@ -577,7 +791,7 @@ function App() {
                 )}
               />
             </FormControl>
-
+                
             <Box sx={{ mt: 2 }}>
               <Typography variant="subtitle1">Dientes seleccionados:</Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -641,42 +855,76 @@ function App() {
       </Paper>
 
       <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-        <Autocomplete
-          freeSolo
-          options={tratamientosGenerales.map(
-            (tratamiento) => `${tratamiento.nombre} - $${tratamiento.costo}`
-          )}
-          value={tratamientoGenText}
-          onChange={(_event, newValue) => {
-            const tratamientoSeleccionado = tratamientosGenerales.find(
-              (t) => `${t.nombre} - $${t.costo}` === newValue
-            );
-            if (tratamientoSeleccionado) {
-              setTratGenselec(tratamientoSeleccionado);
-            }
-            handleChangeTratamientoGeneral(newValue ?? "");
-          }}
-          onInputChange={(_event, newInputValue) => {
-            handleChangeTratamientoGeneral(newInputValue ?? "");
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Tratamientos generales"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-          )}
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Autocomplete
+      freeSolo
+      options={tratamientosGenerales.map(
+        (tratamiento) => `${tratamiento.nombre} - $${tratamiento.costo}`
+      )}
+      value={tratamientoGenText}
+      onChange={(_event, newValue) => {
+        const tratamientoSeleccionado = tratamientosGenerales.find(
+          (t) => `${t.nombre} - $${t.costo}` === newValue
+        );
+        if (tratamientoSeleccionado) {
+          setTratGenselec(tratamientoSeleccionado);
+        }
+        handleChangeTratamientoGeneral(newValue ?? "");
+      }}
+      onInputChange={(_event, newInputValue) => {
+        handleChangeTratamientoGeneral(newInputValue ?? "");
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Tratamientos generales"
+          variant="outlined"
+          fullWidth
+          margin="normal"
         />
-        <Button
-          variant="contained"
-          onClick={agregarTratGeneral}
-          sx={{ mt: 1, mb: 2 }}
-        >
-          Agregar
-        </Button>
-      </Paper>
+      )}
+      fullWidth
+    />
+    <Button 
+      variant="outlined"
+      onClick={() => setShowNuevoTratamientoGeneral(!showNuevoTratamientoGeneral)}
+    >
+      {showNuevoTratamientoGeneral ? 'Cancelar' : 'Nuevo Tratamiento'}
+    </Button>
+  </Box>
+  
+  {showNuevoTratamientoGeneral && (
+    <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+      <TextField
+        fullWidth
+        label="Nombre del tratamiento general"
+        value={nuevoTratamientoGeneral}
+        onChange={(e) => setNuevoTratamientoGeneral(e.target.value)}
+      />
+      <TextField
+        label="Costo"
+        type="number"
+        value={costoTratamientoGeneral}
+        onChange={(e) => setCostoTratamientoGeneral(Number(e.target.value))}
+        sx={{ width: '120px' }}
+      />
+      <Button 
+        variant="contained" 
+        onClick={agregarNuevoTratamientoGeneral}
+      >
+        Agregar
+      </Button>
+    </Box>
+  )}
+  
+  <Button
+    variant="contained"
+    onClick={agregarTratGeneral}
+    sx={{ mt: 1, mb: 2 }}
+  >
+    Agregar
+  </Button>
+</Paper>
 
       <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
         <Typography variant="h5" gutterBottom>Presupuesto</Typography>
@@ -720,19 +968,6 @@ function App() {
                 <TableCell align="right">${item.costo}</TableCell>
               </TableRow>
             ))}
-            {/*<TableRow>
-              <TableCell colSpan={1} align="right">
-                <Typography variant="subtitle1">Total General:</Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="subtitle1">
-                  ${(
-                    tratamientosGeneralesSelectos.reduce((sum, tratgens) => sum + tratgens.costo, 0) +
-                    presupuesto.reduce((sum, afeccionx) => sum + afeccionx.tratamientos.reduce((sum, tratn) => sum + tratn.costo, 0), 0)
-                  ).toFixed(2)}
-                </Typography>
-              </TableCell>
-            </TableRow>*/}
           </TableBody>
         </Table>}
       </Paper>
