@@ -254,7 +254,7 @@ const agregarNuevoTratamientoGeneral = () => {
     costo: costoTratamientoGeneral
   };
   
-  setTratamientosGeneralesSelectos([...tratamientosGenerales, nuevoTratamientoGeneralObj]);
+  setTratamientosGeneralesSelectos([...tratamientosGeneralesSelectos, nuevoTratamientoGeneralObj]);
   setNuevoTratamientoGeneral('');
   setCostoTratamientoGeneral(0);
   setShowNuevoTratamientoGeneral(false);
